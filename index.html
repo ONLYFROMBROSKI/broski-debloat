@@ -12,7 +12,8 @@
             --bg: #050505;
             --card: #121212;
             --text: #ffffff;
-            --glow: 0 0 10px rgba(0, 210, 255, 0.5);
+            --glow: 0 0 15px rgba(0, 210, 255, 0.6);
+            --neon-border: 1px solid rgba(0, 210, 255, 0.3);
         }
 
         body { 
@@ -24,40 +25,56 @@
             overflow-x: hidden;
         }
 
-        /* ЕФЕКТ ЗА ПОЗАДИНА */
-        body::before {
-            content: "";
+        /* АНИМИРАНА ПОЗАДИНА */
+        .bg-glow {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #111 0%, #050505 100%);
+            background: radial-gradient(circle at 50% 50%, #0a1118 0%, #050505 100%);
             z-index: -1;
+        }
+
+        .floating-orb {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.1;
+            border-radius: 50%;
+            z-index: -1;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(100%, 80%); }
         }
 
         /* NAV & LAYOUT */
         nav {
-            background: rgba(0,0,0,0.9);
-            padding: 10px;
+            background: rgba(0,0,0,0.85);
+            padding: 12px;
             position: sticky;
             top: 0;
             display: flex;
             justify-content: center;
-            gap: 5px;
+            gap: 8px;
             border-bottom: 2px solid var(--primary);
             z-index: 1000;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             overflow-x: auto;
         }
         
         nav button {
-            background: none;
+            background: rgba(255,255,255,0.05);
             border: 1px solid transparent;
-            color: #aaa;
+            color: #888;
             font-family: 'Orbitron', sans-serif;
             cursor: pointer;
-            font-size: 0.65rem;
-            padding: 10px;
-            border-radius: 5px;
-            transition: 0.3s;
+            font-size: 0.7rem;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             white-space: nowrap;
         }
 
@@ -65,76 +82,127 @@
             color: var(--primary);
             border-color: var(--primary);
             box-shadow: var(--glow);
+            background: rgba(0, 210, 255, 0.1);
+            transform: translateY(-2px);
         }
 
-        .container { max-width: 600px; margin: 20px auto; padding: 20px; }
-        .page { display: none; animation: fadeIn 0.4s ease; }
+        .container { max-width: 650px; margin: 20px auto; padding: 20px; }
+        .page { display: none; animation: fadeIn 0.5s ease; }
         .page.active { display: block; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: scale(0.98); } 
+            to { opacity: 1; transform: scale(1); } 
+        }
 
         .card { 
             background: var(--card); 
-            border-radius: 15px; 
-            padding: 25px; 
-            margin-bottom: 20px; 
-            border: 1px solid #222;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 25px; 
+            border: var(--neon-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            position: relative;
+            overflow: hidden;
         }
 
-        h1, h2 { font-family: 'Orbitron', sans-serif; color: var(--primary); text-transform: uppercase; }
-        .highlight { color: var(--accent); text-shadow: var(--glow); }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+        }
+
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; color: var(--primary); text-transform: uppercase; margin-top: 0; }
+        .highlight { color: var(--accent); text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            background: #1a1a1a;
+            height: 10px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            transition: 0.5s;
+            box-shadow: var(--glow);
+        }
 
         /* BUTTONS */
         .btn-action {
             background: linear-gradient(45deg, var(--primary), #0081ff);
             color: #000;
             border: none;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 18px;
+            border-radius: 12px;
             width: 100%;
             font-weight: 900;
             cursor: pointer;
             font-family: 'Orbitron', sans-serif;
             transition: 0.3s;
             text-transform: uppercase;
-            margin-top: 10px;
+            margin-top: 15px;
+            letter-spacing: 1px;
         }
 
-        .btn-action:hover { transform: scale(1.02); box-shadow: var(--glow); }
+        .btn-action:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(0, 210, 255, 0.4); 
+        }
 
         /* WATER TRACKER */
-        .water-grid { display: flex; justify-content: space-around; margin: 20px 0; }
+        .water-grid { display: flex; justify-content: space-around; margin: 25px 0; }
         .glass { 
-            font-size: 2rem; cursor: pointer; opacity: 0.3; transition: 0.3s; 
+            font-size: 2.2rem; cursor: pointer; filter: grayscale(1); transition: 0.4s; 
         }
-        .glass.filled { opacity: 1; filter: drop-shadow(0 0 5px var(--primary)); }
+        .glass.filled { filter: grayscale(0); transform: scale(1.2); drop-shadow: var(--glow); }
 
         /* INPUTS */
         .input-box {
-            width: 100%; padding: 12px; margin: 10px 0; background: #1a1a1a;
-            border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box;
+            width: 100%; padding: 15px; margin: 12px 0; background: #0a0a0a;
+            border: 1px solid #333; color: white; border-radius: 10px; box-sizing: border-box;
+            outline: none; transition: 0.3s;
         }
+        .input-box:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,210,255,0.2); }
 
         /* NOTIFICATIONS */
         #notif-banner {
-            display: none; position: fixed; bottom: 20px; left: 20px; right: 20px;
-            background: var(--primary); color: #000; padding: 15px; border-radius: 10px;
-            font-weight: bold; z-index: 2000; animation: slideUp 0.5s ease;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.8);
+            display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px;
+            background: var(--primary); color: #000; padding: 18px; border-radius: 15px;
+            font-weight: 900; z-index: 2000; animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 10px 40px rgba(0, 210, 255, 0.5);
+            text-align: center;
         }
-        @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
+        @keyframes slideUp { from { transform: translate(-50%, 150%); } to { transform: translate(-50%, 0); } }
+
+        /* LISTS */
+        .pill-list li {
+            background: rgba(255,255,255,0.05);
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent);
+        }
     </style>
 </head>
 <body>
 
-    <div id="notif-banner">🚀 BROSKI ALERT: Drink water and fix your posture NOW!</div>
+    <div class="bg-glow"></div>
+    <div class="floating-orb"></div>
+
+    <div id="notif-banner">🔥 BROSKI STATUS: DON'T QUIT NOW! 🚀</div>
 
     <nav>
         <button class="active" onclick="showPage('home')">🏠 HOME</button>
         <button onclick="showPage('mewing')">🦴 MEWING</button>
         <button onclick="showPage('massage')">🧊 MASSAGE</button>
         <button onclick="showPage('diet')">🥗 DIET</button>
+        <button onclick="showPage('supps')">💊 SUPPS</button>
         <button onclick="showPage('qa')">💬 Q&A</button>
         <button onclick="showPage('account')" id="acc-nav">👤 PROFILE</button>
     </nav>
@@ -143,25 +211,30 @@
         
         <div id="home" class="page active">
             <div class="card" style="text-align:center;">
-                <h1 style="letter-spacing: 3px; font-size: 1.5rem;">BROSKI DEBLOAT</h1>
-                <p>Welcome back, <span id="user-display" class="highlight">Warrior</span>.</p>
-                <hr style="border: 0.5px solid #222; margin: 20px 0;">
-                <p style="font-size: 0.8rem; color: #888;">DAILY CHALLENGE:</p>
-                <h3 id="daily-challenge" style="color: var(--accent);">Loading challenge...</h3>
+                <h1 style="letter-spacing: 5px; font-size: 1.8rem; margin-bottom: 5px;">BROSKI DEBLOAT</h1>
+                <p style="margin-bottom: 25px;">Welcome back, <span id="user-display" class="highlight">Warrior</span>.</p>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
+                    <p style="font-size: 0.75rem; color: #888; margin: 0;">CURRENT DAILY OBJECTIVE:</p>
+                    <h3 id="daily-challenge" style="color: var(--accent); margin: 10px 0;">Loading challenge...</h3>
+                </div>
             </div>
 
             <div class="card">
-                <h2>💧 Water Tracker</h2>
-                <p>Goal: 8 Glasses</p>
+                <h2>💧 Hydration Level</h2>
+                <div class="progress-container">
+                    <div id="water-progress" class="progress-bar"></div>
+                </div>
+                <p id="water-status" style="font-size: 0.8rem; text-align: center;">0/8 Glasses - Stay thirsty, King.</p>
                 <div class="water-grid">
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
-                    <span class="glass" onclick="toggleWater(this)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 0)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 1)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 2)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 3)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 4)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 5)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 6)">🥛</span>
+                    <span class="glass" onclick="toggleWater(this, 7)">🥛</span>
                 </div>
             </div>
         </div>
@@ -169,7 +242,11 @@
         <div id="mewing" class="page">
             <div class="card">
                 <h2>Mewing Guide</h2>
-                <p>1. Tongue flat on roof of mouth.<br>2. Lips sealed.<br>3. Teeth slightly touching.</p>
+                <ul class="pill-list" style="list-style: none; padding: 0;">
+                    <li>1️⃣ Tongue flat against the roof of mouth.</li>
+                    <li>2️⃣ Lips sealed, breathe only through nose.</li>
+                    <li>3️⃣ Chin tucks for posture correction.</li>
+                </ul>
                 <a href="https://en.wikipedia.org/wiki/Mewing_(orthodontics)" target="_blank" class="btn-action" style="text-decoration:none; display:block; text-align:center;">ELITE KNOWLEDGE</a>
             </div>
         </div>
@@ -177,7 +254,10 @@
         <div id="massage" class="page">
             <div class="card">
                 <h2>Massage & Drainage</h2>
-                <p>Eliminate morning puffiness using lymphatic drainage.</p>
+                <p>Use ice or a cold roller to wake up the skin and move lymph fluid.</p>
+                <div style="background: #000; padding: 20px; border-radius: 10px; border: 1px dashed var(--primary);">
+                    <p>✨ <b>Pro Tip:</b> Always move from the center of the face outwards to the ears.</p>
+                </div>
                 <a href="https://www.healthline.com/health/lymphatic-drainage-face" target="_blank" class="btn-action" style="text-decoration:none; display:block; text-align:center;">WATCH TUTORIAL</a>
             </div>
         </div>
@@ -185,20 +265,32 @@
         <div id="diet" class="page">
             <div class="card">
                 <h2>Anti-Bloat Diet</h2>
-                <ul style="list-style: none; padding: 0;">
-                    <li>✅ High Potassium (Bananas)</li>
-                    <li>❌ Low Sodium (< 2000mg)</li>
-                    <li>💧 Drink 3L+ Water</li>
-                    <li>🚫 No sugar at night</li>
+                <ul class="pill-list" style="list-style: none; padding: 0;">
+                    <li>✅ <b>High Potassium:</b> Bananas, Spinach, Avocado.</li>
+                    <li>❌ <b>Avoid:</b> Processed Salt, Fizzy Drinks, Bread.</li>
+                    <li>💧 <b>Water:</b> Min 3L to flush out sodium.</li>
+                    <li>🚫 <b>Fast:</b> No food 3 hours before sleep.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="supps" class="page">
+            <div class="card">
+                <h2>Broski Supplements</h2>
+                <p>Natural ways to reduce water retention:</p>
+                <ul class="pill-list" style="list-style: none; padding: 0;">
+                    <li>💊 <b>Magnesium:</b> Reduces bloating and helps sleep.</li>
+                    <li>🍵 <b>Dandelion Root:</b> Natural diuretic to flush water.</li>
+                    <li>☕ <b>Green Tea:</b> Boosts metabolism & antioxidants.</li>
                 </ul>
             </div>
         </div>
 
         <div id="qa" class="page">
             <div class="card">
-                <h2>Ask Broski</h2>
-                <textarea class="input-box" id="user-question" rows="4" placeholder="What's on your mind?"></textarea>
-                <button class="btn-action" onclick="sendQuestion()">SEND TO THE HUB</button>
+                <h2>Ask Broski Hub</h2>
+                <textarea class="input-box" id="user-question" rows="4" placeholder="What's the plan for today, King?"></textarea>
+                <button class="btn-action" onclick="sendQuestion()">SUBMIT TO PROTOCOL</button>
                 <div id="messages-list"></div>
             </div>
         </div>
@@ -207,13 +299,13 @@
             <div class="card">
                 <h2>User Profile</h2>
                 <div id="login-form">
-                    <input type="text" id="username" class="input-box" placeholder="Enter Warrior Name">
-                    <button class="btn-action" onclick="saveProfile()">INITIALIZE PROFILE</button>
+                    <input type="text" id="username" class="input-box" placeholder="Enter Your Warrior Name">
+                    <button class="btn-action" onclick="saveProfile()">INITIALIZE PROTOCOL</button>
                 </div>
                 <div id="profile-info" style="display:none;">
-                    <p>RANK: <span class="highlight">ELITE</span></p>
-                    <p>NOTIFICATIONS: <span style="color:var(--primary)">ACTIVE</span></p>
-                    <button class="btn-action" onclick="logout()" style="background: linear-gradient(45deg, #ff4b2b, #ff0000);">LOGOUT</button>
+                    <p>STATUS: <span class="highlight">ELITE WARRIOR</span></p>
+                    <p>STREAK: <span id="streak-count" style="color:var(--primary)">1 DAY</span></p>
+                    <button class="btn-action" onclick="logout()" style="background: linear-gradient(45deg, #ff4b2b, #ff0000); color: white;">ABANDON MISSION (LOGOUT)</button>
                 </div>
             </div>
         </div>
@@ -227,7 +319,9 @@
             "Do 5 minutes of face massage.",
             "Drink 2 glasses of water now.",
             "Cold shower for 2 minutes.",
-            "Practice mewing for 1 hour straight."
+            "Practice mewing for 1 hour straight.",
+            "Take a 15-min walk after eating.",
+            "No screen time 30 mins before bed."
         ];
 
         function setChallenge() {
@@ -235,9 +329,14 @@
             document.getElementById('daily-challenge').innerText = random;
         }
 
-        // WATER TRACKER
-        function toggleWater(el) {
+        // WATER TRACKER WITH PROGRESS BAR
+        let waterCount = 0;
+        function toggleWater(el, index) {
             el.classList.toggle('filled');
+            const filledGlasses = document.querySelectorAll('.glass.filled').length;
+            const percentage = (filledGlasses / 8) * 100;
+            document.getElementById('water-progress').style.width = percentage + "%";
+            document.getElementById('water-status').innerText = `${filledGlasses}/8 Glasses - ${percentage < 100 ? 'Keep going.' : 'GOAT Status achieved!'}`;
         }
 
         // PAGE SWITCHER
@@ -246,9 +345,10 @@
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             
-            // Highlight current button
-            const btn = Array.from(document.querySelectorAll('nav button')).find(b => b.onclick.toString().includes(pageId));
-            if(btn) btn.classList.add('active');
+            const btns = document.querySelectorAll('nav button');
+            btns.forEach(btn => {
+                if(btn.innerText.toLowerCase().includes(pageId)) btn.classList.add('active');
+            });
         }
 
         // ACCOUNT LOGIC
@@ -281,8 +381,8 @@
             setInterval(() => {
                 const banner = document.getElementById('notif-banner');
                 banner.style.display = 'block';
-                setTimeout(() => { banner.style.display = 'none'; }, 5000);
-            }, 600000); // Секои 10 минути
+                setTimeout(() => { banner.style.display = 'none'; }, 6000);
+            }, 600000); // 10 minutes
         }
 
         function sendQuestion() {
@@ -290,11 +390,12 @@
             if(q) {
                 const list = document.getElementById('messages-list');
                 const div = document.createElement('div');
-                div.style.background = "#000";
-                div.style.padding = "10px";
-                div.style.marginTop = "10px";
+                div.style.background = "rgba(0,0,0,0.5)";
+                div.style.padding = "15px";
+                div.style.marginTop = "15px";
+                div.style.borderRadius = "10px";
                 div.style.borderLeft = "3px solid var(--primary)";
-                div.innerHTML = `<small style="color:var(--primary)">YOU:</small><br>${q}`;
+                div.innerHTML = `<small style="color:var(--primary); font-family:Orbitron;">PROTOCOL MESSAGE:</small><br>${q}`;
                 list.prepend(div);
                 document.getElementById('user-question').value = '';
             }
